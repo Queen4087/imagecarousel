@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple Image Carousel</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #0f172a;
+      }
+      .carousel {
+        position: relative;
+        width: 80%;
+        max-width: 600px;
+        overflow: hidden;
+        border-radius: 10px;
+      }
+      .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      .slide {
+        min-width: 100%;
+      }
+      .slide img {
+        width: 100%;
+        display: block;
+      }
+
+      .btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
+      #prev {
+        left: 10px;
+      }
+      #next {
+        right: 10px;
+      }
+
+      .indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 5px;
+      }
+      .indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: none;
+        background: #ccc;
+        cursor: pointer;
+      }
+      .indicators button.active {
+        background: #333;
+      }
+      .title {
+        text-align: center;
+        text-transform: uppercase;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="carousel">
+      <h1 class="title">Image Carousel</h1>
+      <div class="slides" id="slides">
+        <div class="slide">
+          <img src="https://picsum.photos/id/1015/600/400" alt="" />
+        </div>
+        <div class="slide">
+          <img src="https://picsum.photos/id/1016/600/400" alt="" />
+        </div>
+        <div class="slide">
+          <img src="https://picsum.photos/id/1018/600/400" alt="" />
+        </div>
+        <div class="slide">
+          <img
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop"
+            alt="Ocean wave at golden hour"
+          />
+        </div>
+        <div>
+          <img
+            src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop"
+            alt="Forest path with sunbeams"
+          />
+        </div>
+      </div>
+
+      <button id="prev" class="btn">&#10094;</button>
+      <button id="next" class="btn">&#10095;</button>
+      <div class="indicators" id="indicators"></div>
+    </div>
+
+    <script>
+      const slides = document.getElementById("slides");
+      const prev = document.getElementById("prev");
+      const next = document.getElementById("next");
+      const indicators = document.getElementById("indicators");
+      const totalSlides = document.querySelectorAll(".slide").length;
+
+      let index = 0;
+
+      // Create indicators
+      for (let i = 0; i < totalSlides; i++) {
+        const btn = document.createElement("button");
+        if (i === 0) btn.classList.add("active");
+        btn.addEventListener("click", () => goTo(i));
+        indicators.appendChild(btn);
+      }
+
+      const dots = indicators.querySelectorAll("button");
+
+      function update() {
+        slides.style.transform = `translateX(${-index * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      }
+
+      function goTo(i) {
+        index = (i + totalSlides) % totalSlides;
+        update();
+      }
+
+      prev.addEventListener("click", () => goTo(index - 1));
+      next.addEventListener("click", () => goTo(index + 1));
+
+      // Auto slide
+      setInterval(() => goTo(index + 1), 3000);
+    </script>
+  </body>
+</html>
